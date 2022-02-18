@@ -331,11 +331,10 @@ void vigenere(){
     for(int i=0; i<strlen(text); i++){
         if(text[i]!=32){//32 = espacio en ASCII
             for(j=0; j<strlen(alf2); j++){//Recorremos el alfabeto
-                if(text[i]==alf2[j]) {
+                if(text[i]==alf2[j])
                     coordenada1 = j;//Coordenada del mensaje en la tabla
-                }if(clave[cont%strlen(clave)]==alf2[j]){
+                if(clave[cont%strlen(clave)]==alf2[j])
                     coordenada2 = j;//Coordenada de la clave en la tabla
-                }
             }
             //Ontenemos el caracter cifrado
             coordenada3 = (coordenada1+coordenada2)%26;
@@ -346,9 +345,73 @@ void vigenere(){
     printf("El mensaje cifrado es: %s",text);
 }
 
+void desVigenere(){
+    int coordenada1,coordenada2,coordenada3;
+    char text[100],clave[100];
+    fflush(stdin);
+    int i=0,j=0;
+
+    //Mensaje
+    printf("Ingrese un mensaje: ");
+    fflush(stdin);
+    fgets(text,100,stdin);
+    //Mensaje a minusculas
+    for(int i=0; i<strlen(text); i++) {
+        if((int )text[i]>=65 && (int )text[i]<=90)
+            text[i] = (char )((int )text[i]+32);
+        else if((int )text[i]>=97 && (int )text[i]<=122)
+            text[i] = (char )((int )text[i]);
+    }
+    //Mensaje sin espacios
+    while(text[i]!='\0'){
+        if(text[i]!=' '){
+            text[j]=text[i];
+            fflush(stdin);
+            j++;
+        }
+        i++;
+    }
+    //Quitamos salto de linea
+    for(int i=0; i<strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+
+    //Clave
+    printf("Ingrese una clave: ");
+    scanf("%s",&clave);
+    fflush(stdin);
+    //Clave a minusculas
+    for(int i=0; i<strlen(clave); i++) {
+        if((int )clave[i]>=65 && (int )clave[i]<=90)
+            clave[i] = (char )((int )clave[i]+32);
+        else if((int )clave[i]>=97 && (int )clave[i]<=122)
+            clave[i] = (char )((int )clave[i]);
+    }
+
+    //Descifrado
+    int cont=0;
+    for(int i=0; i<strlen(text); i++){
+        if(text[i]!=32){//Espacio en ASCII
+            for(int j=0; j<strlen(alf2); j++){
+                if(text[i]==alf2[j])
+                    coordenada3=j;
+                if(clave[cont%strlen(clave)]==alf2[j])
+                    coordenada1=j;
+            }if((coordenada3-coordenada1)<0)
+                coordenada2=26+(coordenada3-coordenada1);
+            else
+                coordenada2=(coordenada3-coordenada1)%26;
+            text[i]=alf2[coordenada2];
+            cont++;
+        }
+    }
+    printf("El mensaje descifrado es: %s",text);
+}
+
 int main() {
     //playfair();
     //desPlayfair();
-    vigenere();
+    //vigenere();
+    //desVigenere();
     return 0;
 }
