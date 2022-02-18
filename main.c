@@ -4,10 +4,7 @@
 #include <ctype.h>
 
 char alf[] = {'a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-
-char *Mat(char matriz[5][5]){
-
-}
+char alf2[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 
 void playfair(){
     char clave[100], *claveLow= calloc(strlen(clave)+1, sizeof(char));
@@ -27,11 +24,6 @@ void playfair(){
     printf("Ingrese el mensaje: ");
     fflush(stdin);
     fgets(text,100,stdin);
-    //Quitamos salto de linea
-    for(int i=0; i<strlen(text); i++)
-        if (text[i] == '\n')
-            text[i] = '\0';
-
     //Mensaje a minusculas
     for(int i=0; i<strlen(text); i++) {
         if((int )text[i]>=65 && (int )text[i]<=90)
@@ -39,7 +31,6 @@ void playfair(){
         else if((int )text[i]>=97 && (int )text[i]<=122)
             text[i] = (char )((int )text[i]);
     }
-
     //Mensaje sin espacios
     while(text[i]!='\0'){
         if(text[i]!=' '){
@@ -49,6 +40,10 @@ void playfair(){
         }
         i++;
     }
+    //Quitamos salto de linea
+    for(int i=0; i<strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
 
     //Letras repetidas
     i=0,j=1;
@@ -152,24 +147,48 @@ void playfair(){
 }
 
 void desPlayfair(){
-    char text[100], text2[100];
+    char text[100];
     char clave[100];
     char matriz[5][5];
     int cont=0, cont2=0;//clave alfabeto
+    int i=0,j=0;
 
+    //Mensaje
+    printf("Ingrese un mensaje: ");
+    fflush(stdin);
+    fgets(text,100,stdin);
+    //Mensaje a minusculas
+    for(int i=0; i<strlen(text); i++) {
+        if((int )text[i]>=65 && (int )text[i]<=90)
+            text[i] = (char )((int )text[i]+32);
+        else if((int )text[i]>=97 && (int )text[i]<=122)
+            text[i] = (char )((int )text[i]);
+    }
+    //Mensaje sin espacios
+    while(text[i]!='\0'){
+        if(text[i]!=' '){
+            text[j]=text[i];
+            fflush(stdin);
+            j++;
+        }
+        i++;
+    }
+    //Quitamos salto de linea
+    for(int i=0; i<strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+
+    //Clave
     printf("Ingrese una clave: ");
     scanf("%s",&clave);
     fflush(stdin);
     //Clave a minusculas
     for(int i=0; i<strlen(clave); i++) {
-        printf("%i", clave[i]);
         if((int )clave[i]>=65 && (int )clave[i]<=90)
             clave[i] = (char )((int )clave[i]+32);
         else if((int )clave[i]>=97 && (int )clave[i]<=122)
             clave[i] = (char )((int )clave[i]);
     }
-    printf("\n %i \n",strlen(clave));
-    printf("Clave: %i %s\n",strlen(clave),clave);
 
     //Llenar la matriz con nada
     for(int i=0; i<5; i++)
@@ -209,10 +228,127 @@ void desPlayfair(){
         printf("\n");
     }
     printf("\n");
+
+    //Decodificación
+    i=0,j=1;
+    while(j<=strlen(text)){
+        int f1,f2,c1,c2;
+        //Reemplazamos i por j
+        if(text[i]=='j')
+            text[i]='i';
+        //Obtenemos las coordenadas
+        for(int x=0;x<5;x++){
+            for(int y=0; y<5; y++){
+                if(text[i]==matriz[x][y]){
+                    f1=x;
+                    c1=y;
+                }
+                if(text[j]==matriz[x][y]){
+                    f2=x;
+                    c2=y;
+                }
+            }
+        }
+        if(f1==f2){//Regla 1
+            if((c1-1)<0)
+                text[i]=matriz[f1][4];//No max de columna
+            else
+                text[i]=matriz[f1][c1-1];
+            if ((c2-1)<0)
+                text[j]=matriz[f1][4];
+            else
+                text[j]=matriz[f1][c2-1];
+        }else if(c1==c2){//Regla 2
+            if((f1-1)<0)
+                text[i]=matriz[4][c1];
+            else
+                text[i]=matriz[f1-1][c1];
+            if((f2-1)<0)
+                text[j]=matriz[4][c2];
+            else
+                text[j]=matriz[f2-1][c2];
+        }else{
+            text[i]=matriz[f1][c2];
+            text[j]=matriz[f2][c1];
+        }
+        i=i+2;
+        j=j+2;
+    }
+
+    //Mensaje
+    printf("\n El mensaje descifrado es: ");
+    for(int i=0;i<strlen(text);i++){
+        printf("%c",text[i]);
+        if(i%2!=0)
+            printf(" ");
+    }
+}
+
+void vigenere(){
+    int coordenada1,coordenada2,coordenada3;
+    char text[100],clave[100];
+    fflush(stdin);
+    int i=0,j=0;
+
+    //Ingreso de mensaje
+    printf("Ingrese el mensaje: ");
+    fgets(text,100,stdin);
+    //Mensaje a minusculas
+    for(int i=0; i<strlen(text); i++) {
+        if((int )text[i]>=65 && (int )text[i]<=90)
+            text[i] = (char )((int )text[i]+32);
+        else if((int )text[i]>=97 && (int )text[i]<=122)
+            text[i] = (char )((int )text[i]);
+    }
+    //Mensaje sin espacios
+    while(text[i]!='\0'){
+        if(text[i]!=' '){
+            text[j]=text[i];
+            fflush(stdin);
+            j++;
+        }
+        i++;
+    }
+    //Quitamos salto de linea
+    for(int i=0; i<strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+
+    //Ingreso clave
+    printf("Ingrese la clave: ");
+    scanf("%s",&clave);
+    fflush(stdin);
+    //Clave a minusculas
+    for(int i=0; i<strlen(clave); i++) {
+        if((int )clave[i]>=65 && (int )clave[i]<=90)
+            clave[i] = (char )((int )clave[i]+32);
+        else if((int )clave[i]>=97 && (int )clave[i]<=122)
+            clave[i] = (char )((int )clave[i]);
+    }
+
+    //Cifrado
+    int cont=0;
+    for(int i=0; i<strlen(text); i++){
+        if(text[i]!=32){//32 = espacio en ASCII
+            for(j=0; j<strlen(alf2); j++){//Recorremos el alfabeto
+                if(text[i]==alf2[j]) {
+                    coordenada1 = j;//Coordenada del mensaje en la tabla
+                }if(clave[cont%strlen(clave)]==alf2[j]){
+                    coordenada2 = j;//Coordenada de la clave en la tabla
+                }
+            }
+            //Ontenemos el caracter cifrado
+            coordenada3 = (coordenada1+coordenada2)%26;
+            text[i]=alf2[coordenada3];
+            cont ++;
+        }
+    }
+    printf("El mensaje cifrado es: %s",text);
 }
 
 int main() {
-    playfair();
+    //playfair();
     //desPlayfair();
+    vigenere();
     return 0;
 }
