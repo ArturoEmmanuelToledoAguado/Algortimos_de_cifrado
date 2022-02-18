@@ -408,10 +408,73 @@ void desVigenere(){
     printf("El mensaje descifrado es: %s",text);
 }
 
+void transClave() {
+    int clave[6]={0,0,0,0,0,0}, orden[5] = {1, 2, 3, 4, 5};
+    char text[100], enctext[100];
+    fflush(stdin);
+
+    //Clave
+    printf("\tIngrese la clave (numeros del 1-5 en desorden)\n");
+    for (int i = 1; i < 6; i++) {
+        printf("Ingrese numero: ");
+        scanf("%i", &clave[i]);
+        for (int j = 0; j <= i; j++) {
+            if (clave[i] == clave[j - 1]) {
+                printf("Numero ya ingresado, ingrese otro\n");
+                i--;
+            } else if (clave[i] >= 6 || clave[i] <= 0) {
+                printf("Numero no valido, ingrese otro\n");
+                i--;
+            }
+        }
+    }
+
+    //Mensaje
+    printf("Ingrese un mensaje: ");
+    fflush(stdin);
+    fgets(text, 100, stdin);
+    //Mensaje a minusculas
+    for (int i = 0; i < strlen(text); i++) {
+        if ((int) text[i] >= 65 && (int) text[i] <= 90)
+            text[i] = (char) ((int) text[i] + 32);
+        else if ((int) text[i] >= 97 && (int) text[i] <= 122)
+            text[i] = (char) ((int) text[i]);
+    }
+    //Mensaje sin espacios
+    int i = 0, j = 0;
+    while (text[i] != '\0') {
+        if (text[i] != ' ') {
+            text[j] = text[i];
+            fflush(stdin);
+            j++;
+        }
+        i++;
+    }
+    //Quitamos salto de linea
+    for (int i = 0; i < strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+    //Modulo para hacer bloques de 5 y rellenar con x
+    for (int i = 0; i < strlen(text); i++) {
+        if (strlen(text) % 5 != 0) {
+            text[strlen(text) + 1] = '\0';
+            text[strlen(text)] = 'x';
+        }
+    }
+    //Quitamos salto de linea
+    for (int i = 0; i < strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+
+    printf("%i%i%i%i%i%i  %s",clave[0],clave[1],clave[2],clave[3],clave[4],clave[5],text);
+    //Encriptado
+}
+
 int main() {
     //playfair();
     //desPlayfair();
     //vigenere();
     //desVigenere();
+    transClave();
     return 0;
 }
