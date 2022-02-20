@@ -410,10 +410,27 @@ void desVigenere(){
 
 void transClave() {
     char text[100];
-    int clave[5]={3,1,4,5,2}, orden[5]={1,2,3,4,5};
+    //int clave[5]={3,1,4,5,2}, orden[5]={1,2,3,4,5};
+    int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
+
+    //Clave
+    printf("\tIngrese la clave (numeros del 1-5 en desorden)\n");
+    for(int i=0;i<5;i++){
+        printf("Ingrese un numero: ");
+        scanf("%i", &clave[i]);
+        for(int j=0;j<=i;j++){
+            if(clave[i]==clave[j-1]){
+                printf("Numero ya ingresado, ingrese otro\n");
+                i--;
+            }else if(clave[i]>=6 || clave[i]<=0){
+                printf("Numero no valido, ingrese otro\n");
+                i--;
+            }
+        }
+    }
 
     //Mensaje
-    printf("Ingrese un mensaje: ");
+    printf("\nIngrese un mensaje: ");
     fflush(stdin);
     fgets(text, 100, stdin);
     //Mensaje a minusculas
@@ -482,11 +499,16 @@ void transClave() {
     printf("El mensaje cifrado es: %s\n",ciftext);
 }
 
+void desTranClave(){
+
+}
+
 int main() {
     //playfair();
     //desPlayfair();
     //vigenere();
     //desVigenere();
     transClave();
+    //desTranClave();
     return 0;
 }
