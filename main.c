@@ -409,25 +409,8 @@ void desVigenere(){
 }
 
 void transClave() {
-    int clave[6]={0,0,0,0,0,0}, orden[5] = {1, 2, 3, 4, 5};
-    char text[100], enctext[100];
-    fflush(stdin);
-
-    //Clave
-    printf("\tIngrese la clave (numeros del 1-5 en desorden)\n");
-    for (int i = 1; i < 6; i++) {
-        printf("Ingrese numero: ");
-        scanf("%i", &clave[i]);
-        for (int j = 0; j <= i; j++) {
-            if (clave[i] == clave[j - 1]) {
-                printf("Numero ya ingresado, ingrese otro\n");
-                i--;
-            } else if (clave[i] >= 6 || clave[i] <= 0) {
-                printf("Numero no valido, ingrese otro\n");
-                i--;
-            }
-        }
-    }
+    char text[100];
+    int clave[5]={3,1,4,5,2}, orden[5]={1,2,3,4,5};
 
     //Mensaje
     printf("Ingrese un mensaje: ");
@@ -466,8 +449,37 @@ void transClave() {
         if (text[i] == '\n')
             text[i] = '\0';
 
-    printf("%i%i%i%i%i%i  %s",clave[0],clave[1],clave[2],clave[3],clave[4],clave[5],text);
-    //Encriptado
+    //Cifrado
+    char aux[5];
+    int k=0,k1=0;
+    fflush(stdin);
+    int cont=(strlen(text))/5;
+    char ciftext[strlen(text)];
+
+    //Uso de auxiliar para guardar 5 caracteres
+    for(int i = 0; i < cont; i++){
+        for(int j=i*5; j<((i+1)*5);j++) {
+            aux[k]=text[j];
+            k++;
+        }
+        k=0;
+        //Quitamos el inicio de encabezado (☺)
+        for (int i = 0; i < strlen(aux); i++)
+            if (aux[i] == 1)//Codigo ASCII para inicio de encabezado(☺)
+                aux[i] = '\0';
+        //Se reacomodan los carcteres en base a la clave en ciftex
+        for(int j=0;j<strlen(aux);j++){
+            fflush(stdin);
+            ciftext[k1]=aux[clave[j]-1];
+            k1++;
+        }
+    }
+    //Eliminador de basura
+    for(int m=0;m<strlen(ciftext);m++){
+        if(m>=strlen(text))
+            ciftext[m]=NULL;
+    }
+    printf("El mensaje cifrado es: %s\n",ciftext);
 }
 
 int main() {
