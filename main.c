@@ -4,7 +4,6 @@
 #include <time.h>
 #include <ctype.h>
 
-char alf[] = {'a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 char alf2[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 
 void date();
@@ -12,7 +11,7 @@ void menu();
 void write();
 int submenu();
 char * cleanphrase(char phrase[]);
-void write();
+void write(int);
 void playfair(int);
 void desPlayfair();
 void vigenere(int);
@@ -30,7 +29,7 @@ void date(){
     tm = localtime(&t);
     printf("\t\t\t%02d-%02d-%02d\n", tm->tm_mday, tm->tm_mon, 1900+tm->tm_year);
     printf("\tBaeza Ramirez Luis Gerardo 2012010273\n");
-    printf("\tSeleccione una Pocion\n");
+    printf("\tSeleccione una Opcion\n");
 }
 
 int submenu(){
@@ -57,22 +56,39 @@ int submenu(){
     }while(valref != '4');
 }
 
-void write() {
+void write(int valor) {
     FILE *file;
     char phrase[1024];
 
-    file = fopen("Textoacifrar.txt", "w+");
-    if (file == NULL){
-        printf("No se ha podido abrir el archivo.\n");
-        exit(1);
+    if (valor == 1){
+        file = fopen("Textoacifrar.txt", "w+");
+        if (file == NULL){
+            printf("No se ha podido abrir el archivo.\n");
+            exit(1);
+        }
+        printf("Introduce el mensaje a cifrar\n");
+        fflush(stdin);
+        fgets(phrase,1024,stdin);
+        char *ph = cleanphrase(phrase);
+        fprintf(file,"%s", ph);
+        fclose(file);
+        system("pause");
+    }else if (valor == 2){
+        file = fopen("ClavePF.txt", "w+");
+        if (file == NULL){
+            printf("No se ha podido abrir el archivo.\n");
+            exit(1);
+        }
+        printf("Ingrese una clave: ");
+        fflush(stdin);
+        fgets(phrase,1024,stdin);
+        for(int i=0; i<strlen(phrase); i++)
+            phrase[i]=tolower((unsigned char)phrase[i]);
+        printf("Clave: %s\n",phrase);
+        char *ph = cleanphrase(phrase);
+        fprintf(file,"%s", ph);
+        fclose(file);
     }
-    printf("Introduce el mensaje a cifrar\n");
-    fflush(stdin);
-    fgets(phrase,1024,stdin);
-    char *ph = cleanphrase(phrase);
-    fprintf(file,"%s", ph);
-    fclose(file);
-    system("pause");
 }
 
 void menu(){
@@ -86,7 +102,7 @@ void menu(){
 
         switch(valref){
             case '1':
-                write();
+                write(1);
                 break;
             case '2':
                 valor = submenu();
@@ -130,13 +146,9 @@ void playfair(int valRef){
     int cont=0,cont2=0;//clave alfabeto
     int i=0,j=0;
 
-    printf("Ingrese una clave: ");
-    scanf("%s",&clave);
-    fflush(stdin);
-    //Clave a minusculas
-    for(int i=0; i<strlen(clave); i++)
-        claveLow[i]=tolower((unsigned char)clave[i]);
-    printf("Clave: %s\n",claveLow);
+    if( valRef == 1){
+        write(2);
+    }
 
     printf("Ingrese el mensaje: ");
     fflush(stdin);
@@ -157,10 +169,6 @@ void playfair(int valRef){
         }
         i++;
     }
-    //Quitamos salto de linea
-    for(int i=0; i<strlen(text); i++)
-        if (text[i] == '\n')
-            text[i] = '\0';
 
     //Letras repetidas
     i=0,j=1;
@@ -203,10 +211,10 @@ void playfair(int valRef){
     for(int i=0; i<5; i++) {
         for(int j=0; j<5; j++){
             if(matriz[i][j]=='\0'){
-                matriz[i][j]=alf[cont2];
+                matriz[i][j]=alf2[cont2];
                 for(int k=0; k<strlen(claveLow); k++){
-                    if(alf[cont2]==claveLow[k])
-                        matriz[i][j]=alf[++cont2];
+                    if(alf2[cont2]==claveLow[k])
+                        matriz[i][j]=alf2[++cont2];
                 }
                 cont2 ++;
             }
@@ -329,10 +337,10 @@ void desPlayfair(){
     for(int i=0; i<5; i++) {
         for(int j=0; j<5; j++){
             if(matriz[i][j]=='\0'){
-                matriz[i][j]=alf[cont2];
+                matriz[i][j]=alf2[cont2];
                 for(int k=0; k<strlen(clave); k++){
-                    if(alf[cont2]==clave[k])
-                        matriz[i][j]=alf[++cont2];
+                    if(alf2[cont2]==clave[k])
+                        matriz[i][j]=alf2[++cont2];
                 }
                 cont2 ++;
             }
