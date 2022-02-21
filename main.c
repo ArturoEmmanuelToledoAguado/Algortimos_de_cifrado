@@ -7,6 +7,7 @@ char alf[] = {'a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r
 char alf2[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 
 void playfair(){
+    system("cls");
     char clave[100], *claveLow= calloc(strlen(clave)+1, sizeof(char));
     char text[100];
     char matriz[5][5];
@@ -144,9 +145,11 @@ void playfair(){
         if(i%2!=0)
             printf(" ");
     }
+    printf("\n");
 }
 
 void desPlayfair(){
+    system("cls");
     char text[100];
     char clave[100];
     char matriz[5][5];
@@ -282,9 +285,11 @@ void desPlayfair(){
         if(i%2!=0)
             printf(" ");
     }
+    printf("\n");
 }
 
 void vigenere(){
+    system("cls");
     int coordenada1,coordenada2,coordenada3;
     char text[100],clave[100];
     fflush(stdin);
@@ -342,10 +347,11 @@ void vigenere(){
             cont ++;
         }
     }
-    printf("El mensaje cifrado es: %s",text);
+    printf("El mensaje cifrado es: %s\n",text);
 }
 
 void desVigenere(){
+    system("cls");
     int coordenada1,coordenada2,coordenada3;
     char text[100],clave[100];
     fflush(stdin);
@@ -405,10 +411,11 @@ void desVigenere(){
             cont++;
         }
     }
-    printf("El mensaje descifrado es: %s",text);
+    printf("El mensaje descifrado es: %s\n",text);
 }
 
 void transClave() {
+    system("cls");
     char text[100];
     int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
 
@@ -483,7 +490,7 @@ void transClave() {
         for (int i = 0; i < strlen(aux); i++)
             if (aux[i] == 1)//Codigo ASCII para inicio de encabezado(☺)
                 aux[i] = '\0';
-        //Se reacomodan los carcteres en base a la clave en ciftex
+        //Se reacomodan los caracteres en base a la clave en ciftex
         for(int j=0;j<strlen(aux);j++){
             fflush(stdin);
             ciftext[k1]=aux[clave[j]-1];
@@ -499,6 +506,7 @@ void transClave() {
 }
 
 void desTranClave(){
+    system("cls");
     char text[100];
     int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
 
@@ -597,11 +605,37 @@ void desTranClave(){
 }
 
 int main() {
-    //playfair();
-    //desPlayfair();
-    //vigenere();
-    //desVigenere();
-    //transClave();
-    desTranClave();
+    int opc=0;
+    while(opc<7) {
+        printf("\t\t\t ***** Menu ****\n");
+        printf("\n1.-Cifrado Playfair\n2.-Descifrado Playfair\n3.-Cifrado Vigenere\n4.-Descifrado Vigenere\n5.-Cifrado por Transposicion con Clave\n6.-Descifrado por Transposicion con Clave\n7.-Salir\n");
+        scanf("%i",&opc);
+        switch(opc){
+            case 1:
+                playfair();
+                break;
+            case 2:
+                desPlayfair();
+                break;
+            case 3:
+                vigenere();
+                break;
+            case 4:
+                desVigenere();
+                break;
+            case 5:
+                transClave();
+                break;
+            case 6:
+                desTranClave();
+                break;
+        }
+        //playfair();
+        //desPlayfair();
+        //vigenere();
+        //desVigenere();
+        //transClave();
+        //desTranClave();
+    }
     return 0;
 }
