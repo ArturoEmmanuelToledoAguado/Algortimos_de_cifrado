@@ -417,18 +417,18 @@ void desVigenere(){
 void transClave() {
     system("cls");
     char text[100];
-    int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
+    int orden[5]={0, 0, 0, 0, 0};
 
     //Clave
-    printf("\tIngrese la clave (numeros del 1-5 en desorden)\n");
+    printf("\tIngrese la orden (numeros del 1-5 en desorden)\n");
     for(int i=0;i<5;i++){
         printf("Ingrese un numero: ");
-        scanf("%i", &clave[i]);
+        scanf("%i", &orden[i]);
         for(int j=0;j<=i;j++){
-            if(clave[i]==clave[j-1]){
+            if(orden[i] == orden[j - 1]){
                 printf("Numero ya ingresado, ingrese otro\n");
                 i--;
-            }else if(clave[i]>=6 || clave[i]<=0){
+            }else if(orden[i] >= 6 || orden[i] <= 0){
                 printf("Numero no valido, ingrese otro\n");
                 i--;
             }
@@ -490,10 +490,10 @@ void transClave() {
         for (int i = 0; i < strlen(aux); i++)
             if (aux[i] == 1)//Codigo ASCII para inicio de encabezado(☺)
                 aux[i] = '\0';
-        //Se reacomodan los caracteres en base a la clave en ciftex
+        //Se reacomodan los caracteres en base a la orden en ciftex
         for(int j=0;j<strlen(aux);j++){
             fflush(stdin);
-            ciftext[k1]=aux[clave[j]-1];
+            ciftext[k1]=aux[orden[j] - 1];
             k1++;
         }
     }
