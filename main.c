@@ -630,12 +630,6 @@ int main() {
                 desTranClave();
                 break;
         }
-        //playfair();
-        //desPlayfair();
-        //vigenere();
-        //desVigenere();
-        //transClave();
-        //desTranClave();
     }
     return 0;
 }
