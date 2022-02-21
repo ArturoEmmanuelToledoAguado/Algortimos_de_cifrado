@@ -1,12 +1,128 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include <ctype.h>
 
 char alf[] = {'a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 char alf2[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 
-void playfair(){
+void date();
+void menu();
+void write();
+int submenu();
+char * cleanphrase(char phrase[]);
+void write();
+void playfair(int);
+void desPlayfair();
+void vigenere(int);
+void trans(int);
+
+int main() {
+    menu();
+    return 0;
+}
+
+void date(){
+    time_t t;
+    struct tm *tm;
+    t = time(NULL);
+    tm = localtime(&t);
+    printf("\t\t\t%02d-%02d-%02d\n", tm->tm_mday, tm->tm_mon, 1900+tm->tm_year);
+    printf("\tBaeza Ramirez Luis Gerardo 2012010273\n");
+    printf("\tSeleccione una Pocion\n");
+}
+
+int submenu(){
+    char valref;
+    int returnvalue;
+    do{
+        system("cls");
+        date();
+        printf("1.Cifrar texto\n2.Ver texto cifrado\n3.Descifrar texto\n4.Regresar\n");
+        fflush(stdin);
+        scanf("%c", &valref);
+        returnvalue = valref - '0';
+        switch(returnvalue){
+            case 1 || 2 || 3:
+                return returnvalue;
+            case 4:
+                printf("Adios");
+                returnvalue = 0;
+                break;
+            default:
+                printf("invalid");
+                break;
+        }
+    }while(valref != '4');
+}
+
+void write() {
+    FILE *file;
+    char phrase[1024];
+
+    file = fopen("Textoacifrar.txt", "w+");
+    if (file == NULL){
+        printf("No se ha podido abrir el archivo.\n");
+        exit(1);
+    }
+    printf("Introduce el mensaje a cifrar\n");
+    fflush(stdin);
+    fgets(phrase,1024,stdin);
+    char *ph = cleanphrase(phrase);
+    fprintf(file,"%s", ph);
+    fclose(file);
+    system("pause");
+}
+
+void menu(){
+    char valref;
+    int valor;
+    do{
+        system("cls");
+        date();
+        printf("1.Introducir texto a cifrar\n2.Cifrado Playfair\n3.Cifrado Vigenere\n4.Transposicion con clave\n5.Salir\n");
+        scanf("%c",&valref);
+
+        switch(valref){
+            case '1':
+                write();
+                break;
+            case '2':
+                valor = submenu();
+                (valor == 0)?:playfair(valor);
+                break;
+            case '3':
+                valor = submenu();
+                (valor == 0)?:vigenere(valor);
+                break;
+            case '4':
+                valor = submenu();
+                (valor == 0)?:trans(valor);
+                break;
+            case '5':
+                printf("Adios");
+                break;
+            default:
+                printf("invalid");
+                break;
+        }
+    }while(valref != '5');
+
+}
+
+char * cleanphrase(char phrase[]){
+    int i = 0;
+    while(i <= 1024){
+        if(phrase[i] == '\n'){
+            phrase[i] = '\0';
+        }
+        i++;
+    }
+    return phrase;
+}
+
+void playfair(int valRef){
     system("cls");
     char clave[100], *claveLow= calloc(strlen(clave)+1, sizeof(char));
     char text[100];
@@ -288,7 +404,7 @@ void desPlayfair(){
     printf("\n");
 }
 
-void vigenere(){
+void vigenere(int ValRef){
     system("cls");
     int coordenada1,coordenada2,coordenada3;
     char text[100],clave[100];
@@ -414,7 +530,7 @@ void desVigenere(){
     printf("El mensaje descifrado es: %s\n",text);
 }
 
-void transClave() {
+void trans(int ValRef) {
     system("cls");
     char text[100];
     int orden[5]={0, 0, 0, 0, 0};
@@ -602,34 +718,4 @@ void desTranClave(){
             desciftext[m]=NULL;
     }
     printf("El mensaje descifrado es: %s\n",desciftext);
-}
-
-int main() {
-    int opc=0;
-    while(opc<7) {
-        printf("\t\t\t ***** Menu ****\n");
-        printf("\n1.-Cifrado Playfair\n2.-Descifrado Playfair\n3.-Cifrado Vigenere\n4.-Descifrado Vigenere\n5.-Cifrado por Transposicion con Clave\n6.-Descifrado por Transposicion con Clave\n7.-Salir\n");
-        scanf("%i",&opc);
-        switch(opc){
-            case 1:
-                playfair();
-                break;
-            case 2:
-                desPlayfair();
-                break;
-            case 3:
-                vigenere();
-                break;
-            case 4:
-                desVigenere();
-                break;
-            case 5:
-                transClave();
-                break;
-            case 6:
-                desTranClave();
-                break;
-        }
-    }
-    return 0;
 }
