@@ -410,7 +410,6 @@ void desVigenere(){
 
 void transClave() {
     char text[100];
-    //int clave[5]={3,1,4,5,2}, orden[5]={1,2,3,4,5};
     int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
 
     //Clave
@@ -500,7 +499,101 @@ void transClave() {
 }
 
 void desTranClave(){
+    char text[100];
+    int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
 
+    //Clave
+    printf("\tIngrese la clave (numeros del 1-5 en desorden)\n");
+    for(int i=0;i<5;i++){
+        printf("Ingrese un numero: ");
+        scanf("%i", &clave[i]);
+        for(int j=0;j<=i;j++){
+            if(clave[i]==clave[j-1]){
+                printf("Numero ya ingresado, ingrese otro\n");
+                i--;
+            }else if(clave[i]>=6 || clave[i]<=0){
+                printf("Numero no valido, ingrese otro\n");
+                i--;
+            }
+        }
+    }
+
+    //Mensaje
+    printf("\nIngrese un mensaje: ");
+    fflush(stdin);
+    fgets(text, 100, stdin);
+    //Mensaje a minusculas
+    for (int i = 0; i < strlen(text); i++) {
+        if ((int) text[i] >= 65 && (int) text[i] <= 90)
+            text[i] = (char) ((int) text[i] + 32);
+        else if ((int) text[i] >= 97 && (int) text[i] <= 122)
+            text[i] = (char) ((int) text[i]);
+    }
+    //Mensaje sin espacios
+    int i = 0, j = 0;
+    while (text[i] != '\0') {
+        if (text[i] != ' ') {
+            text[j] = text[i];
+            fflush(stdin);
+            j++;
+        }
+        i++;
+    }
+    //Quitamos salto de linea
+    for (int i = 0; i < strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+    //Modulo para hacer bloques de 5 y rellenar con x
+    for (int i = 0; i < strlen(text); i++) {
+        if (strlen(text) % 5 != 0) {
+            text[strlen(text) + 1] = '\0';
+            text[strlen(text)] = 'x';
+        }
+    }
+    //Quitamos salto de linea
+    for (int i = 0; i < strlen(text); i++)
+        if (text[i] == '\n')
+            text[i] = '\0';
+
+    //Descifrado
+    char aux[5], aux2[5];
+    int k=0,k1=0;
+    fflush(stdin);
+    int cont=(strlen(text))/5;
+    char desciftext[strlen(text)];
+
+    //Uso de auxiliar para guardar 5 caracteres
+    for(int i = 0; i < cont; i++){
+        for(int j=i*5; j<((i+1)*5);j++) {
+            aux[k]=text[j];
+            k++;
+        }
+        k=0;
+        //Quitamos el inicio de encabezado (☺)
+        for (int i = 0; i < strlen(aux); i++)
+            if (aux[i] == 1)//Codigo ASCII para inicio de encabezado(☺)
+                aux[i] = '\0';
+        //Se reacomodan los caracteres en base al orden
+        for(int j=0;j<strlen(aux);j++){
+            fflush(stdin);
+            aux2[clave[j]-1]=aux[j];
+        }
+        //Eliminador de basura
+        for(int m=0;m<strlen(aux2);m++){
+            if(m>=strlen(aux))
+                aux2[m]=NULL;
+        }
+        for(int n=0;n<strlen(aux2);n++){
+            desciftext[k1]=aux2[n];
+            k1++;
+        }
+    }
+    //Eliminador de basura
+    for(int m=0;m<strlen(desciftext);m++){
+        if(m>=strlen(text))
+            desciftext[m]=NULL;
+    }
+    printf("El mensaje descifrado es: %s\n",desciftext);
 }
 
 int main() {
@@ -508,7 +601,7 @@ int main() {
     //desPlayfair();
     //vigenere();
     //desVigenere();
-    transClave();
-    //desTranClave();
+    //transClave();
+    desTranClave();
     return 0;
 }
