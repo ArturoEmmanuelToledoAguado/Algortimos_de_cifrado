@@ -11,11 +11,13 @@ void menu();
 void write();
 int submenu();
 char * cleanphrase(char phrase[]);
-void write(int);
-void playfair(int);
+void write();
+void playfair();
 void desPlayfair();
-void vigenere(int);
-void trans(int);
+void vigenere();
+void desVigenere();
+void trans();
+void desTrans();
 
 int main() {
     menu();
@@ -38,57 +40,31 @@ int submenu(){
     do{
         system("cls");
         date();
-        printf("1.Cifrar texto\n2.Ver texto cifrado\n3.Descifrar texto\n4.Regresar\n");
+        printf("1.Cifrar texto\n2.Descifrar texto\n3.Regresar\n");
         fflush(stdin);
         scanf("%c", &valref);
         returnvalue = valref - '0';
-        switch(returnvalue){
-            case 1 || 2 || 3:
-                return returnvalue;
-            case 4:
-                printf("Adios");
-                returnvalue = 0;
-                break;
-            default:
-                printf("invalid");
-                break;
-        }
-    }while(valref != '4');
+        (returnvalue == 3) ? returnvalue = 0 : (returnvalue == 1 || returnvalue == 2) ? : printf("invalid");
+        return returnvalue;
+    }while(valref != '3');
 }
 
-void write(int valor) {
+void write() {
     FILE *file;
     char phrase[1024];
 
-    if (valor == 1){
-        file = fopen("Textoacifrar.txt", "w+");
-        if (file == NULL){
-            printf("No se ha podido abrir el archivo.\n");
-            exit(1);
-        }
-        printf("Introduce el mensaje a cifrar\n");
-        fflush(stdin);
-        fgets(phrase,1024,stdin);
-        char *ph = cleanphrase(phrase);
-        fprintf(file,"%s", ph);
-        fclose(file);
-        system("pause");
-    }else if (valor == 2){
-        file = fopen("ClavePF.txt", "w+");
-        if (file == NULL){
-            printf("No se ha podido abrir el archivo.\n");
-            exit(1);
-        }
-        printf("Ingrese una clave: ");
-        fflush(stdin);
-        fgets(phrase,1024,stdin);
-        for(int i=0; i<strlen(phrase); i++)
-            phrase[i]=tolower((unsigned char)phrase[i]);
-        printf("Clave: %s\n",phrase);
-        char *ph = cleanphrase(phrase);
-        fprintf(file,"%s", ph);
-        fclose(file);
+    file = fopen("Textoacifrar.txt", "w+");
+    if (file == NULL){
+        printf("No se ha podido abrir el archivo.\n");
+        exit(1);
     }
+    printf("Introduce el mensaje a cifrar\n");
+    fflush(stdin);
+    fgets(phrase,1024,stdin);
+    char *ph = cleanphrase(phrase);
+    fprintf(file,"%s", ph);
+    fclose(file);
+    system("pause");
 }
 
 void menu(){
@@ -97,33 +73,30 @@ void menu(){
     do{
         system("cls");
         date();
-        printf("1.Introducir texto a cifrar\n2.Cifrado Playfair\n3.Cifrado Vigenere\n4.Transposicion con clave\n5.Salir\n");
+        printf("1.Cifrado Playfair\n2.Cifrado Vigenere\n3.Transposicion con clave\n4.Salir\n");
         scanf("%c",&valref);
 
         switch(valref){
             case '1':
-                write(1);
+                valor = submenu();
+                (valor == 0)?:(valor == 1)?playfair():desPlayfair();
                 break;
             case '2':
                 valor = submenu();
-                (valor == 0)?:playfair(valor);
+                (valor == 0)?:(valor == 1)?vigenere():desVigenere();
                 break;
             case '3':
                 valor = submenu();
-                (valor == 0)?:vigenere(valor);
+                (valor == 0)?:(valor == 1)?trans():desTrans();
                 break;
             case '4':
-                valor = submenu();
-                (valor == 0)?:trans(valor);
-                break;
-            case '5':
                 printf("Adios");
                 break;
             default:
                 printf("invalid");
                 break;
         }
-    }while(valref != '5');
+    }while(valref != '4');
 
 }
 
@@ -138,7 +111,7 @@ char * cleanphrase(char phrase[]){
     return phrase;
 }
 
-void playfair(int valRef){
+void playfair(){
     system("cls");
     char clave[100], *claveLow= calloc(strlen(clave)+1, sizeof(char));
     char text[100];
@@ -146,9 +119,13 @@ void playfair(int valRef){
     int cont=0,cont2=0;//clave alfabeto
     int i=0,j=0;
 
-    if( valRef == 1){
-        write(2);
-    }
+    printf("Ingrese una clave: ");
+    scanf("%s",&clave);
+    fflush(stdin);
+    //Clave a minusculas
+    for(int i=0; i<strlen(clave); i++)
+        claveLow[i]=tolower((unsigned char)clave[i]);
+    printf("Clave: %s\n",claveLow);
 
     printf("Ingrese el mensaje: ");
     fflush(stdin);
@@ -272,13 +249,13 @@ void playfair(int valRef){
     printf("\n");
 }
 
-void desPlayfair(){
+void desPlayfair() {
     system("cls");
     char text[100];
     char clave[100];
     char matriz[5][5];
-    int cont=0, cont2=0;//clave alfabeto
-    int i=0,j=0;
+    int cont = 0, cont2 = 0;//clave alfabeto
+    int i = 0, j = 0;
 
     //Mensaje
     printf("Ingrese un mensaje: ");
@@ -307,7 +284,7 @@ void desPlayfair(){
 
     //Clave
     printf("Ingrese una clave: ");
-    scanf("%s",&clave);
+    scanf("%s", &clave);
     fflush(stdin);
     //Clave a minusculas
     for(int i=0; i<strlen(clave); i++) {
@@ -331,7 +308,6 @@ void desPlayfair(){
             }
         }
     }
-    fflush(stdin);
 
     //Llenar la matriz con el alfabeto
     for(int i=0; i<5; i++) {
@@ -412,7 +388,7 @@ void desPlayfair(){
     printf("\n");
 }
 
-void vigenere(int ValRef){
+void vigenere(){
     system("cls");
     int coordenada1,coordenada2,coordenada3;
     char text[100],clave[100];
@@ -538,7 +514,7 @@ void desVigenere(){
     printf("El mensaje descifrado es: %s\n",text);
 }
 
-void trans(int ValRef) {
+void trans() {
     system("cls");
     char text[100];
     int orden[5]={0, 0, 0, 0, 0};
@@ -629,7 +605,7 @@ void trans(int ValRef) {
     printf("El mensaje cifrado es: %s\n",ciftext);
 }
 
-void desTranClave(){
+void desTrans(){
     system("cls");
     char text[100];
     int clave[5]={0,0,0,0,0}, orden[5]={1,2,3,4,5};
